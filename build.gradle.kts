@@ -15,7 +15,7 @@ dependencies {
     implementation("org.postgresql:postgresql:42.1.4")
 
     // Jackson
-    runtimeOnly("com.fasterxml.jackson.module:jackson-modules-java8:2.13.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
 
     // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
