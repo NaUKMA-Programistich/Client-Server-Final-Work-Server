@@ -165,7 +165,7 @@ _Request_
 
 _Response_
 
-PUT /api/good/
+PUT /api/product/
 ```json
 {
   "name": "string",
@@ -177,12 +177,46 @@ PUT /api/good/
 }
 ```
 
+**Add product count**
+
+_Response_
+
+PUT /api/product/add
+```json
+{
+  "name": "string",
+  "count": "number"
+}
+```
+
 _Request_
 
 * 201
 ```json
 {
-  "id": "number"
+  "count": "number"
+}
+```
+* 400 - Error Message
+
+**Remove product count**
+
+_Response_
+
+PUT /api/product/remove
+```json
+{
+  "name": "string",
+  "count": "number"
+}
+```
+
+_Request_
+
+* 201
+```json
+{
+  "count": "number"
 }
 ```
 * 400 - Error Message
@@ -229,7 +263,6 @@ _Request_
 ]
 ```
 * 400 - Error Message
-
 
 ### Statistics
 
