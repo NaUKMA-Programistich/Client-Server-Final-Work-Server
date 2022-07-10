@@ -1,17 +1,40 @@
 package org.example.controller
 
-import com.sun.net.httpserver.HttpHandler
-import com.sun.net.httpserver.HttpsExchange
-import com.sun.net.httpserver.HttpsServer
+import com.sun.net.httpserver.*
+import java.io.FileInputStream
 import java.net.InetSocketAddress
+import java.security.KeyStore
+import javax.net.ssl.*
 
 class Server {
     private val controller = Controller()
-    // TODO https://stackoverflow.com/questions/2308479/simple-java-https-server
     fun instance(): HttpsServer {
         val server: HttpsServer = HttpsServer.create()
         server.apply {
             bind(InetSocketAddress(8080), 0)
+
+            val password = "password".toCharArray()
+            val key = KeyStore.getInstance("JKS")
+            key.load(FileInputStream("testkey.jks"), password)
+
+            val keysManagerFactory = KeyManagerFactory.getInstance("SunX509")
+            keysManagerFactory.init(key, password)
+            val trustManagerFactory = TrustManagerFactory.getInstance("SunX509")
+            trustManagerFactory.init(key)
+
+            val sslContext = SSLContext.getInstance("TLS")
+            sslContext.init(keysManagerFactory.keyManagers, trustManagerFactory.trustManagers, null)
+            server.httpsConfigurator = object : HttpsConfigurator(sslContext) {
+                override fun configure(params: HttpsParameters) {
+                    val context = getSSLContext()
+                    val engine = context.createSSLEngine()
+                    params.needClientAuth = false
+                    params.cipherSuites = engine.enabledCipherSuites
+                    params.protocols = engine.enabledProtocols
+                    val sslParameters = context.supportedSSLParameters
+                    params.setSSLParameters(sslParameters)
+                }
+            }
 
             val context = createContext("/")
             context.handler = HttpHandler { exchange ->
