@@ -69,6 +69,6 @@ class Server {
         EndpointHandler("/api/remove/product/?", "POST") { productService.processRemoveProduct(it) }, // add product
 
         EndpointHandler("/api/search/?", "GET") { utilsService.processSearch(it) }, // search by product filter
-        EndpointHandler("/api/stats/?", "GET") { utilsService.processUnknown(it) }, // search by product filter
+        EndpointHandler("/api/stats/?", "GET") { utilsService.processStatistics(it) }, // search by product filter
     )
 }
