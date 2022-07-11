@@ -1,7 +1,6 @@
 package org.example.db
 
 import org.example.model.Product
-import org.example.model.ProductFilter
 import org.example.utils.ExistException
 import org.example.utils.Extensions.toProduct
 import java.sql.Connection
@@ -10,8 +9,9 @@ import java.sql.Statement
 
 class ProductDatabase(
     private val database: Database,
-    private val connection: Connection = database.connection()
 ) {
+
+    private val connection: Connection = database.connection()
 
     fun createProduct(product: Product): Result<Int> {
         return runCatching<Int> {
@@ -42,6 +42,9 @@ class ProductDatabase(
     fun editProduct(id: Int, product: Product): Result<Unit> {
         return runCatching<Unit> {
             val statement = connection.createStatement()
+            if (!database.existNameInGroup(product.group).getOrThrow()) {
+                return Result.failure(ExistException("Group with name ${product.group} already exist"))
+            }
             val query = """
                     UPDATE products
                     SET name = '${product.name}',
@@ -56,28 +59,10 @@ class ProductDatabase(
         }
     }
 
-    fun getAllProduct(productFilter: ProductFilter = ProductFilter()): Result<List<Product>> {
+    fun getAllProduct(): Result<List<Product>> {
         return runCatching<List<Product>> {
             val products = mutableListOf<Product>()
-            var query = "SELECT * FROM products"
-
-            val filters = setOf(
-                SqlBuilder.startWith(productFilter.nameStart, "name"),
-                SqlBuilder.startWith(productFilter.descriptionStart, "description"),
-                SqlBuilder.startWith(productFilter.vendorStart, "vendor"),
-                SqlBuilder.startWith(productFilter.groupStart, "groupName"),
-
-                SqlBuilder.less(productFilter.countFrom?.toDouble(), "count"),
-                SqlBuilder.more(productFilter.countTo?.toDouble(), "count"),
-
-                SqlBuilder.less(productFilter.priceFrom, "price"),
-                SqlBuilder.more(productFilter.priceTo, "price"),
-            )
-
-            if (filters.filterNotNull().isNotEmpty()) {
-                query += " WHERE " + filters.filterNotNull().joinToString(" AND ")
-            }
-
+            val query = "SELECT * FROM products"
             val statement = connection.createStatement()
             val resultSet = statement.executeQuery(query)
             while (resultSet.next()) {
@@ -91,6 +76,16 @@ class ProductDatabase(
         return runCatching<Product> {
             val statement = connection.createStatement()
             val query = "SELECT * FROM products WHERE id = '$id'"
+            val resultSet = statement.executeQuery(query)
+            resultSet.next()
+            resultSet.toProduct()
+        }
+    }
+
+    fun getProductByName(name: String): Result<Product> {
+        return runCatching<Product> {
+            val statement = connection.createStatement()
+            val query = "SELECT * FROM products WHERE name = '$name'"
             val resultSet = statement.executeQuery(query)
             resultSet.next()
             resultSet.toProduct()

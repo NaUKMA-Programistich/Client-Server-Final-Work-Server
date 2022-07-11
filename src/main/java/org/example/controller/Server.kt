@@ -1,13 +1,21 @@
 package org.example.controller
 
 import com.sun.net.httpserver.*
+import org.example.db.Database
+import org.example.service.GroupService
+import org.example.service.ProductService
+import org.example.service.UtilsService
 import java.io.FileInputStream
 import java.net.InetSocketAddress
 import java.security.KeyStore
 import javax.net.ssl.*
 
 class Server {
-    private val controller = Controller()
+    private val database = Database("client", "root", "root")
+    private val groupService = GroupService(database)
+    private val productService = ProductService(database)
+    private val utilsService = UtilsService(database)
+
     fun instance(): HttpsServer {
         val server: HttpsServer = HttpsServer.create()
         server.apply {
@@ -39,7 +47,7 @@ class Server {
             val context = createContext("/")
             context.handler = HttpHandler { exchange ->
                 val handler = handlers.firstOrNull { it.isMatch(exchange as HttpsExchange) }
-                if (handler == null) controller.processUnknown(exchange as HttpsExchange)
+                if (handler == null) utilsService.processUnknown(exchange as HttpsExchange)
                 else handler.handle(exchange as HttpsExchange)
             }
             executor = null
@@ -48,19 +56,19 @@ class Server {
     }
 
     private val handlers = listOf(
-        EndpointHandler("/api/group/?", "GET") { controller.processUnknown(it) }, // get all group
-        EndpointHandler("/api/group/?", "PUT") { controller.processUnknown(it) }, // add group
-        EndpointHandler("/api/group/(\\d+)", "DELETE") { controller.processUnknown(it) }, // delete group by id
-        EndpointHandler("/api/group/(\\d+)", "PUT") { controller.processUnknown(it) }, // update group by id
+        EndpointHandler("/api/group/?", "GET") { groupService.processGetAllGroup(it) }, // get all group
+        EndpointHandler("/api/group/?", "POST") { groupService.processCreateGroup(it) }, // add group
+        EndpointHandler("/api/group/(\\d+)", "DELETE") { groupService.processDeleteGroup(it) }, // delete group by id
+        EndpointHandler("/api/group/(\\d+)", "PUT") { groupService.processEditGroup(it) }, // update group by id
 
-        EndpointHandler("/api/product/?", "GET") { controller.processUnknown(it) }, // get all product
-        EndpointHandler("/api/product/?", "PUT") { controller.processUnknown(it) }, // add product count
-        EndpointHandler("/api/product/add/?", "PUT") { controller.processUnknown(it) }, // remove product count
-        EndpointHandler("/api/product/remove/?", "PUT") { controller.processUnknown(it) }, // add product
-        EndpointHandler("/api/product/(\\d+)", "DELETE") { controller.processUnknown(it) }, // delete product by id
-        EndpointHandler("/api/product/(\\d+)", "PUT") { controller.processUnknown(it) }, // update product by id
+        EndpointHandler("/api/product/?", "GET") { productService.processGetAllProduct(it) }, // get all product
+        EndpointHandler("/api/product/?", "POST") { productService.processCreateProduct(it) }, // add product count
+        EndpointHandler("/api/product/(\\d+)", "DELETE") { productService.processDeleteProduct(it) }, // delete product by id
+        EndpointHandler("/api/product/(\\d+)", "PUT") { productService.processEditProduct(it) }, // update product by id
+        EndpointHandler("/api/add/product/?", "POST") { productService.processAddProduct(it) }, // remove product count
+        EndpointHandler("/api/remove/product/?", "POST") { productService.processRemoveProduct(it) }, // add product
 
-        EndpointHandler("/api/search/?", "GET") { controller.processUnknown(it) }, // search by product filter
-        EndpointHandler("/api/stats/?", "GET") { controller.processUnknown(it) }, // search by product filter
+        EndpointHandler("/api/search/?", "GET") { utilsService.processSearch(it) }, // search by product filter
+        EndpointHandler("/api/stats/?", "GET") { utilsService.processUnknown(it) }, // search by product filter
     )
 }

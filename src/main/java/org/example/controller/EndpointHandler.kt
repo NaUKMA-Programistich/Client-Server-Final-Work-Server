@@ -14,6 +14,7 @@ data class EndpointHandler(
     }
 
     fun handle(exchange: HttpsExchange) {
+        exchange.responseHeaders["Content-Type"] = "application/json"
         handler.invoke(exchange)
     }
 }

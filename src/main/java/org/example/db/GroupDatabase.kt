@@ -8,8 +8,9 @@ import java.sql.Statement
 
 class GroupDatabase(
     private val database: Database,
-    private val connection: Connection = database.connection()
 ) {
+
+    private val connection: Connection = database.connection()
     fun createGroup(group: Group): Result<Int> {
         return runCatching<Int> {
             if (database.existNameInGroup(group.name).getOrThrow()) {

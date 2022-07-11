@@ -1,5 +1,8 @@
 package org.example.db
 
+import org.example.model.Product
+import org.example.model.ProductFilter
+import org.example.utils.Extensions.toProduct
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -67,6 +70,37 @@ class Database(name: String, user: String, password: String) {
             val query = "SELECT name FROM groups WHERE name = '$name'"
             val resultSet = statement.executeQuery(query)
             resultSet.next()
+        }
+    }
+
+    fun getFilterProduct(productFilter: ProductFilter = ProductFilter()): Result<List<Product>> {
+        return runCatching<List<Product>> {
+            val products = mutableListOf<Product>()
+            var query = "SELECT * FROM products"
+
+            val filters = setOf(
+                SqlBuilder.startWith(productFilter.nameStart, "name"),
+                SqlBuilder.startWith(productFilter.descriptionStart, "description"),
+                SqlBuilder.startWith(productFilter.vendorStart, "vendor"),
+                SqlBuilder.startWith(productFilter.groupStart, "groupName"),
+
+                SqlBuilder.less(productFilter.countFrom?.toDouble(), "count"),
+                SqlBuilder.more(productFilter.countTo?.toDouble(), "count"),
+
+                SqlBuilder.less(productFilter.priceFrom, "price"),
+                SqlBuilder.more(productFilter.priceTo, "price"),
+            )
+
+            if (filters.filterNotNull().isNotEmpty()) {
+                query += " WHERE " + filters.filterNotNull().joinToString(" AND ")
+            }
+
+            val statement = connection.createStatement()
+            val resultSet = statement.executeQuery(query)
+            while (resultSet.next()) {
+                products.add(resultSet.toProduct())
+            }
+            products
         }
     }
 }

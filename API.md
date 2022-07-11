@@ -26,6 +26,12 @@ _Request_
 ```
 * 400 - Error Message
 
+```json
+{ 
+  "message": "string"
+}
+```
+
 **Get group by ID**
 
 _Response_
@@ -43,6 +49,12 @@ _Request_
 ```
 * 400 - Error Message
 
+```json
+{ 
+  "message": "string"
+}
+```
+
 **Update group by ID**
 
 _Response_
@@ -57,8 +69,14 @@ PUT /api/group/{id}
 
 _Request_
 
-* 200 - Good
+* 204 - Good
 * 400 - Error Message
+
+```json
+{ 
+  "message": "string"
+}
+```
 
 **Add group**
 
@@ -75,13 +93,18 @@ PUT /api/group/
 _Request_
 
 * 201
-* 201
 ```json
 {
   "id": "number"
 }
 ```
+
 * 400 - Error Message
+```json
+{ 
+  "message": "string"
+}
+```
 
 ### Product
 
@@ -117,6 +140,11 @@ _Request_
 ]
 ```
 * 400 - Error Message
+```json
+{ 
+  "message": "string"
+}
+```
 
 **Get product by ID**
 
@@ -140,6 +168,12 @@ _Request_
 ```
 * 400 - Error Message
 
+```json
+{ 
+  "message": "string"
+}
+```
+
 **Update product by ID**
 
 _Response_
@@ -158,8 +192,21 @@ PUT /api/product/{id}
 
 _Request_
 
-* 200 - Good
+* 204 - Good
 * 400 - Error Message
+
+```json
+{ 
+  "message": "string"
+}
+```
+
+```json
+{ 
+  "message": "string"
+}
+```
+
 
 **Add product**
 
@@ -198,6 +245,12 @@ _Request_
 }
 ```
 * 400 - Error Message
+```json
+{ 
+  "message": "string"
+}
+```
+
 
 **Remove product count**
 
@@ -220,6 +273,13 @@ _Request_
 }
 ```
 * 400 - Error Message
+
+```json
+{ 
+  "message": "string"
+}
+```
+
 
 ### Search
 
@@ -264,6 +324,12 @@ _Request_
 ```
 * 400 - Error Message
 
+```json
+{ 
+  "message": "string"
+}
+```
+
 ### Statistics
 
 _Response_
@@ -304,3 +370,10 @@ _Request_
 }
 ```
 * 400 - Error Message
+
+```json
+{ 
+  "message": "string"
+}
+```
+
