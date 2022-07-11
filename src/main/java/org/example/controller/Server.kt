@@ -13,7 +13,7 @@ class Server {
         server.apply {
             bind(InetSocketAddress(8080), 0)
 
-            val password = "password".toCharArray()
+            val password = "naukma".toCharArray()
             val key = KeyStore.getInstance("JKS")
             key.load(FileInputStream("testkey.jks"), password)
 
