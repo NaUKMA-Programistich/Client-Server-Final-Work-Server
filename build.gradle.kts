@@ -17,11 +17,6 @@ dependencies {
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
 
-    // JWT
-    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
-    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
-    implementation("io.jsonwebtoken:jjwt-gson:0.11.5")
-
     // Test
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")

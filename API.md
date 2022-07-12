@@ -228,7 +228,7 @@ PUT /api/product/
 
 _Response_
 
-PUT /api/product/add
+PUT /api/add/product/
 ```json
 {
   "name": "string",
@@ -256,7 +256,7 @@ _Request_
 
 _Response_
 
-PUT /api/product/remove
+PUT /api/remove/product
 ```json
 {
   "name": "string",
