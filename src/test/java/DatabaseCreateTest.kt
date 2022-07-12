@@ -2,13 +2,12 @@ import org.example.db.Database
 import org.example.db.GroupDatabase
 import org.example.db.ProductDatabase
 import org.example.utils.Mock
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DatabaseCreateTest {
-    private val database = Database("client", "root", "root")
+    private val database = Database("clientTest", "root", "root")
     private val groupDatabase = GroupDatabase(database)
     private val productDatabase = ProductDatabase(database)
 
@@ -19,6 +18,7 @@ class DatabaseCreateTest {
     }
 
     @Test
+    @Order(1)
     fun `Create three group`() {
         Mock.group.forEachIndexed { index, group ->
             val result = groupDatabase.createGroup(group)

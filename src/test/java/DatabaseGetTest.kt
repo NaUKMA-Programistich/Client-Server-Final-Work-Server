@@ -9,7 +9,7 @@ import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DatabaseGetTest {
-    private val database = Database("client", "root", "root")
+    private val database = Database("clientTest", "root", "root")
     private val groupDatabase = GroupDatabase(database)
     private val productDatabase = ProductDatabase(database)
 
@@ -41,7 +41,7 @@ class DatabaseGetTest {
             nameStart = "Product",
             groupStart = "Group B"
         )
-        val result = productDatabase.getAllProduct(filter)
+        val result = database.getFilterProduct(filter)
         assert(result.isSuccess)
         println(result.getOrThrow().forEach(::println))
     }

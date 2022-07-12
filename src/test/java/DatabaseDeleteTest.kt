@@ -8,7 +8,7 @@ import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DatabaseDeleteTest {
-    private val database = Database("client", "root", "root")
+    private val database = Database("clientTest", "root", "root")
     private val groupDatabase = GroupDatabase(database)
     private val productDatabase = ProductDatabase(database)
 
