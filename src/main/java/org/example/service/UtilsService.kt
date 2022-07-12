@@ -36,15 +36,14 @@ open class UtilsService(
         var price = 0.0
         groups.onSuccess {
             it.forEach { group ->
-                val productsByGroup = products.getOrThrow().filter { it.group == group.name }
-                val priceInGroup = productsByGroup.sumOf { it.price }
-                val countInGroup = productsByGroup.sumOf { it.count }
-                price += (priceInGroup * countInGroup)
+                val productsByGroup = products.getOrThrow().filter { product -> product.group == group.name }
+                val priceInGroup = productsByGroup.sumOf { product -> product.price * product.count }
+                price += priceInGroup
                 result.add(
                     GroupStatistics(
                         group = group,
                         products = productsByGroup,
-                        price = priceInGroup * countInGroup,
+                        price = priceInGroup,
                     )
                 )
             }
