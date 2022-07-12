@@ -16,10 +16,10 @@ class ProductDatabase(
     fun createProduct(product: Product): Result<Int> {
         return runCatching<Int> {
             if (database.existNameInProduct(product.name).getOrThrow()) {
-                return Result.failure(ExistException("Product with name ${product.name} already exist"))
+                return Result.failure(ExistException("Product with name ${product.name} already exists"))
             }
             if (!database.existNameInGroup(product.group).getOrThrow()) {
-                return Result.failure(ExistException("Group with name ${product.group} already exist"))
+                return Result.failure(ExistException("Group with name ${product.group} does not exist yet"))
             }
             val query = """
                     INSERT INTO products (name, description, groupName, vendor, count, price)
@@ -42,8 +42,11 @@ class ProductDatabase(
     fun editProduct(id: Int, product: Product): Result<Unit> {
         return runCatching<Unit> {
             val statement = connection.createStatement()
+            if (database.existNameInProduct(product.name).getOrThrow() && !database.isSameProduct(id, product.name).getOrThrow()) {
+                return Result.failure(ExistException("Product with name ${product.name} already exists"))
+            }
             if (!database.existNameInGroup(product.group).getOrThrow()) {
-                return Result.failure(ExistException("Group with name ${product.group} already exist"))
+                return Result.failure(ExistException("Group with name ${product.group} does not exist yet"))
             }
             val query = """
                     UPDATE products
