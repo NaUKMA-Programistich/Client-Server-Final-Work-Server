@@ -23,6 +23,10 @@ open class UtilsService(
         process(exchange, 201, result)
     }
 
+    fun corsHandle(exchange: HttpsExchange) {
+        process(exchange, 200, "Good");
+    }
+
     fun processStatistics(exchange: HttpsExchange) {
         val products = productDatabase.getAllProduct()
         val groups = groupDatabase.getAllGroup()

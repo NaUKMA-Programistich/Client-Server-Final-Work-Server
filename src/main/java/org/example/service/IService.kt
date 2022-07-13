@@ -13,6 +13,8 @@ interface IService {
             val codeResult = if (content.isSuccess) code else if (code > 400) code else 400
 
             exchange.responseHeaders.add("Access-Control-Allow-Origin", "*");
+            exchange.responseHeaders.add("Access-Control-Allow-Headers", "Content-type");
+            exchange.responseHeaders.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE")
             exchange.sendResponseHeaders(codeResult, data.size.toLong())
             exchange.responseBody.write(data)
             exchange.responseBody.close()
@@ -23,6 +25,9 @@ interface IService {
 
     fun process(exchange: HttpsExchange, code: Int, content: String) {
         try {
+            exchange.responseHeaders.add("Access-Control-Allow-Origin", "*");
+            exchange.responseHeaders.add("Access-Control-Allow-Headers", "Content-type");
+            exchange.responseHeaders.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE, PUT")
             val data = Extensions.mapper.writeValueAsBytes(content)
             exchange.sendResponseHeaders(code, data.size.toLong())
             exchange.responseBody.write(data)
