@@ -20,6 +20,10 @@ dependencies {
     // Test
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
+    testImplementation("org.mockito:mockito-junit-jupiter:2.17.0")
+    testImplementation("org.mockito:mockito-inline:4.6.1")
+
 }
 
 tasks.getByName<Test>("test") {
