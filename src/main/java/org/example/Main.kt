@@ -4,4 +4,5 @@ import org.example.controller.Server
 
 fun main() {
     Server().instance().start()
+    println("Server started")
 }

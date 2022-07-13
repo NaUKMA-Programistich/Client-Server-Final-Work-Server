@@ -64,10 +64,28 @@ class Database(name: String, user: String, password: String) {
         }
     }
 
+    fun isSameProduct(id: Int, name: String) : Result<Boolean> {
+        return runCatching<Boolean> {
+            val statement = connection.createStatement()
+            val query = "SELECT * FROM products WHERE id = '$id' AND name = '$name'"
+            val resultSet = statement.executeQuery(query)
+            resultSet.next()
+        }
+    }
+
     fun existNameInGroup(name: String): Result<Boolean> {
         return runCatching<Boolean> {
             val statement = connection.createStatement()
             val query = "SELECT name FROM groups WHERE name = '$name'"
+            val resultSet = statement.executeQuery(query)
+            resultSet.next()
+        }
+    }
+
+    fun isSameGroup(id: Int, name: String) : Result<Boolean> {
+        return runCatching<Boolean> {
+            val statement = connection.createStatement()
+            val query = "SELECT * FROM groups WHERE id = '$id' AND name = '$name'"
             val resultSet = statement.executeQuery(query)
             resultSet.next()
         }

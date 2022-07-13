@@ -14,7 +14,7 @@ class GroupDatabase(
     fun createGroup(group: Group): Result<Int> {
         return runCatching<Int> {
             if (database.existNameInGroup(group.name).getOrThrow()) {
-                return Result.failure(ExistException("Group with name ${group.name} already exist"))
+                return Result.failure(ExistException("Group with name ${group.name} already exists"))
             }
             val query = """
                     INSERT INTO groups (name, description)
@@ -32,6 +32,9 @@ class GroupDatabase(
 
     fun editGroup(id: Int, group: Group): Result<Unit> {
         return runCatching<Unit> {
+            if (database.existNameInGroup(group.name).getOrThrow() && !database.isSameGroup(id, group.name).getOrThrow()) {
+                return Result.failure(ExistException("Group with name ${group.name} already exists"))
+            }
             val currentGroup = getGroupById(id).getOrThrow()
             val statement = connection.createStatement()
             val queryGroup = """
