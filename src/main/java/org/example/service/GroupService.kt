@@ -17,6 +17,12 @@ class GroupService(
         process(exchange, 201, result)
     }
 
+    fun processGetGroup(exchange: HttpsExchange) {
+        val id = exchange.requestURI.path.split("/").last().toInt()
+        val result = groupDatabase.getGroupById(id)
+        process(exchange, 201, result)
+    }
+
     fun processEditGroup(exchange: HttpsExchange) {
         val group = mapper.readValue(exchange.requestBody, Group::class.java)
         validation(

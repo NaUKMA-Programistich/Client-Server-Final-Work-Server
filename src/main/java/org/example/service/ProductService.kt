@@ -5,7 +5,7 @@ import org.example.db.Database
 import org.example.db.ProductDatabase
 import org.example.model.CountProduct
 import org.example.model.Product
-import org.example.utils.Extensions
+import org.example.utils.Extensions.mapper
 
 class ProductService(
     database: Database
@@ -18,8 +18,14 @@ class ProductService(
         process(exchange, 201, result)
     }
 
+    fun processGetProduct(exchange: HttpsExchange) {
+        val id = exchange.requestURI.path.split("/").last().toInt()
+        val result = productDatabase.getProductById(id)
+        process(exchange, 201, result)
+    }
+
     fun processEditProduct(exchange: HttpsExchange) {
-        val product = Extensions.mapper.readValue(exchange.requestBody, Product::class.java)
+        val product = mapper.readValue(exchange.requestBody, Product::class.java)
         validation(
             message = product.isValid(),
             good = {
@@ -40,7 +46,7 @@ class ProductService(
     }
 
     fun processCreateProduct(exchange: HttpsExchange) {
-        val product = Extensions.mapper.readValue(exchange.requestBody, Product::class.java)
+        val product = mapper.readValue(exchange.requestBody, Product::class.java)
         validation(
             message = product.isValid(),
             good = {
@@ -57,7 +63,7 @@ class ProductService(
     }
 
     fun processAddProduct(exchange: HttpsExchange) {
-        val countProduct = Extensions.mapper.readValue(exchange.requestBody, CountProduct::class.java)
+        val countProduct = mapper.readValue(exchange.requestBody, CountProduct::class.java)
         validation(
             message = countProduct.isValid(),
             good = {
@@ -79,7 +85,7 @@ class ProductService(
     }
 
     fun processRemoveProduct(exchange: HttpsExchange) {
-        val countProduct = Extensions.mapper.readValue(exchange.requestBody, CountProduct::class.java)
+        val countProduct = mapper.readValue(exchange.requestBody, CountProduct::class.java)
         validation(
             message = countProduct.isValid(),
             good = {

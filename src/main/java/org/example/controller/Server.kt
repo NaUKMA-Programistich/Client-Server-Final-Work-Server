@@ -8,7 +8,9 @@ import org.example.service.UtilsService
 import java.io.FileInputStream
 import java.net.InetSocketAddress
 import java.security.KeyStore
-import javax.net.ssl.*
+import javax.net.ssl.KeyManagerFactory
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManagerFactory
 
 class Server {
     private val database = Database("client", "root", "root")
@@ -57,11 +59,13 @@ class Server {
 
     private val handlers = listOf(
         EndpointHandler("/api/group/?", "GET") { groupService.processGetAllGroup(it) }, // get all group
+        EndpointHandler("/api/group/(\\d+)", "GET") { groupService.processGetGroup(it) }, // get one group
         EndpointHandler("/api/group/?", "POST") { groupService.processCreateGroup(it) }, // add group
         EndpointHandler("/api/group/(\\d+)", "DELETE") { groupService.processDeleteGroup(it) }, // delete group by id
         EndpointHandler("/api/group/(\\d+)", "PUT") { groupService.processEditGroup(it) }, // update group by id
 
         EndpointHandler("/api/product/?", "GET") { productService.processGetAllProduct(it) }, // get all product
+        EndpointHandler("/api/product/(\\d+)", "GET") { productService.processGetProduct(it) }, // get one product
         EndpointHandler("/api/product/?", "POST") { productService.processCreateProduct(it) }, // add product count
         EndpointHandler("/api/product/(\\d+)", "DELETE") { productService.processDeleteProduct(it) }, // delete product by id
         EndpointHandler("/api/product/(\\d+)", "PUT") { productService.processEditProduct(it) }, // update product by id
