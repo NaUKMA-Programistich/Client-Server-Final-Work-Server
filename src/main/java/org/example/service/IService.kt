@@ -12,6 +12,7 @@ interface IService {
 
             val codeResult = if (content.isSuccess) code else if (code > 400) code else 400
 
+            exchange.responseHeaders.add("Access-Control-Allow-Origin", "*");
             exchange.sendResponseHeaders(codeResult, data.size.toLong())
             exchange.responseBody.write(data)
             exchange.responseBody.close()
