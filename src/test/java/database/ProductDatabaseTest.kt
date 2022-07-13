@@ -62,7 +62,7 @@ class ProductDatabaseTest {
 
     @Test
     @Order(3)
-    fun getAllFilteredProducts_thenReturnsCorrectProducts(){
+    fun getAllFilteredProducts_thenReturnsCorrectProducts() {
         val products = database.getFilterProduct(ProductFilter(groupStart = "Group B"))
         assert(products.isSuccess)
         assertEquals(products.getOrThrow().size, 2)

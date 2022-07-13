@@ -74,6 +74,6 @@ class Server {
 
         EndpointHandler("/api/search/?", "POST") { utilsService.processSearch(it) }, // search by product filter
         EndpointHandler("/api/stats/?", "GET") { utilsService.processStatistics(it) }, // search by product filter
-        EndpointHandler(".*", "OPTIONS") { utilsService.corsHandle(it) }
+        EndpointHandler(".*", "OPTIONS") { utilsService.corsHandle(it) } // options for frontend
     )
 }
