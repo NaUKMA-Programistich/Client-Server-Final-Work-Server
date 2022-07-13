@@ -68,7 +68,8 @@ class Server {
         EndpointHandler("/api/add/product/?", "POST") { productService.processAddProduct(it) }, // remove product count
         EndpointHandler("/api/remove/product/?", "POST") { productService.processRemoveProduct(it) }, // add product
 
-        EndpointHandler("/api/search/?", "GET") { utilsService.processSearch(it) }, // search by product filter
+        EndpointHandler("/api/search/?", "POST") { utilsService.processSearch(it) }, // search by product filter
         EndpointHandler("/api/stats/?", "GET") { utilsService.processStatistics(it) }, // search by product filter
+        EndpointHandler(".*", "OPTIONS") { utilsService.corsHandle(it) }
     )
 }
